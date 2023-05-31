@@ -1,0 +1,55 @@
+module String
+  module Colours
+    def aqua: -> String
+
+    def bg_aqua: -> String
+
+    def bg_black: -> String
+
+    def bg_blue: -> String
+
+    def bg_gray: -> String
+
+    def bg_green: -> String
+
+    def bg_red: -> String
+
+    def bg_violet: -> String
+
+    def bg_white: -> String
+
+    def bg_yellow: -> String
+
+    def black: -> String
+
+    def blue: -> String
+
+    def burnt_orange: -> String
+
+    def charcoal: -> String
+
+    def colourised?: -> bool
+
+    def gray: -> String
+
+    def green: -> String
+
+    def pink: -> String
+
+    def purple: -> String
+
+    def red: -> String
+
+    def strip_colours!: -> String
+
+    def tan: -> String
+
+    def turquoise: -> String
+
+    def violet: -> String
+
+    def white: -> String
+
+    def yellow: -> String
+  end
+end

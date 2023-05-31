@@ -1,0 +1,8 @@
+module BetterTrace
+  ALL_METHODS: String
+  LINES_THAT_BREAK_STUFF: Array[String]
+  LOCAL_IGNORED: Array[Symbol]
+  OPTIONS_TEXT: String
+  VERSION: String
+  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+end

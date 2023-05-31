@@ -1,0 +1,17 @@
+module String
+  module Formatting
+    def fill_width: -> Numeric
+
+    def formatted?: -> bool
+
+    def strip_formatting!: -> String
+
+    def sym_padding: -> String
+
+    def width_to: -> untyped
+
+    private
+
+    def default_width: -> Numeric
+  end
+end

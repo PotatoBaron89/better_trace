@@ -1,0 +1,19 @@
+module String
+  module Styling
+    def blink: -> String
+
+    def bold: -> String
+
+    def faint: -> String
+
+    def hide: -> String
+
+    def italic: -> String
+
+    def reverse: -> String
+
+    def strike: -> String
+
+    def underline: -> String
+  end
+end

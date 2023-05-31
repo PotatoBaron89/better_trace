@@ -1,0 +1,5 @@
+module String
+  module DebugHelpers
+    def is_gem?: -> bool
+  end
+end
