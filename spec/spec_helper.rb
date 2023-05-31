@@ -13,3 +13,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+def with_default_exception
+  BetterTrace.exception_override_disabled { yield }
+end

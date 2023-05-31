@@ -3,18 +3,38 @@
 class Exception
 
   def self.===(other)
-    cl = caller_locations[0]
+    unless trace_in_progress? || !override_enabled?
+      self.trace_in_progress = true
+      is_rescued = caller_locations[0].label.include?("rescue in block")
 
-    unless cl.path.to_s.include?("/active_support/inflector/methods") || cl.path.to_s.include?("/lib/ruby/2.7.0/irb/ruby-lex")
-      path = "#{caller_locations[0].path}:#{caller_locations[0].lineno}"
-      error = caller_locations[0].label
-      is_rescued = error.include?("rescue in block")
-
-      BetterTrace.rescued_exceptions << RescuedException.new(other, path, caller_locations, is_rescued: is_rescued)
-
-      puts "    #{caller_locations.to_a.as_trace}"
+      BetterTrace.logged_exceptions << LoggedException.new(other, binding, is_rescued)
     end
-
+    self.trace_in_progress = false
     super
+  end
+
+  def self.trace_in_progress
+    Thread.current[:_trace_in_progress]
+  end
+
+  def self.trace_in_progress=(val)
+    Thread.current[:_trace_in_progress] = val
+  end
+
+  def self.trace_in_progress?
+    !!trace_in_progress
+  end
+
+  # Should be moved to better_trace.rb
+  def self.override_on
+    Thread.current[:_trace_override_status] ||= true
+  end
+
+  def self.override_on=(val)
+    Thread.current[:_trace_override_status] = val
+  end
+
+  def self.override_enabled?
+    !!override_on
   end
 end
