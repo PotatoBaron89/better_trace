@@ -8,13 +8,15 @@ require 'binding_of_caller'
 
 require_relative "better_trace/version"
 
-require_relative "better_trace/overrides/exception"
 require_relative "better_trace/overrides/array"
 require_relative "better_trace/overrides/object"
 require_relative "better_trace/overrides/string"
 
 require_relative "better_trace/constants"
 require_relative "better_trace/attributable"
+
+require_relative "better_trace/config/core"
+require_relative "better_trace/config/filters"
 require_relative "better_trace/config"
 
 require_relative "better_trace/trace_stack"
@@ -23,6 +25,7 @@ require_relative "better_trace/trace_stack/frame"
 require_relative "better_trace/trace_stack/stack"
 require_relative "better_trace/trace_stack/stack_trace"
 
+require_relative "better_trace/overrides/exception"
 require_relative "better_trace/overrides/overrides/logged_exception"
 
 puts "Running BetterTrace #{BetterTrace::VERSION}".yellow

@@ -10,4 +10,11 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Layout/LineLength:
-  Max: 120
+  Max: 140
+
+Layout/ExtraSpacing:
+  EnforcedStyle: space
+  Enabled: false
+
+Layout/TrailingEmptyLines:
+  Enabled: false

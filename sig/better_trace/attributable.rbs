@@ -1,0 +1,5 @@
+module BetterTrace
+  module Attributable
+    def attribute: -> Symbol
+  end
+end

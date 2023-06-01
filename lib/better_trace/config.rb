@@ -5,35 +5,29 @@ module BetterTrace
   class Config
     extend Attributable
 
-    attribute :skip_bindings, default: false, with_bool: :skip_bindings?    # default: false, if enabled, skips all binding.pry calls
-    attribute :indent_value, default: 3                                     # default: 2, the number of spaces to indent each line
-    attribute :highlight_lines, default: []                                 # default: [], an array of strings to highlight in the stack trace
-    attribute :reject_lines, default: []                                    # default: [], an array of strings to reject in the stack trace, if highlight_lines matches, it will be displayed
+    attribute :reject_filter, default: RejectFilter.new
+    attribute :highlight_filter, default: HighlightFilter.new
+    attribute :source_filter, default: SourceFilter.new
 
-    attribute :reject_gem_lines, default: false,                            # default: false, if enabled, rejects all gem lines
-              with_bool: :reject_gem_lines?
-    attribute :show_source_for_gems, default: true,                        # default: false, if enabled, shows source for gems
-              with_bool: :show_source_for_gems?
+    attribute :core, default: Core.new
+    delegate(*Core::DELEGATED_METHODS, to: :core)
 
-    attribute :tracked_objects, default: []                                 # default: [], an array of object_ids to track
+
+    attribute :tracked_objects, default: []                 # default: [], an array of object_ids to track
 
     def initialize(*args)
-      # TODO: Setup handling of args, this is placeholder
       opts = args.extract_options!
 
       self.attributes.each do |k, v|
         self.send("#{k}=", opts[k] || override_defaults[k] || v[:default])
       end
-
-      @opts = opts
-      @args = args
     end
 
     class GemResults
       extend Attributable
 
       attribute :state, default: :gray
-      attribute :show_source, default: false, with_bool: :show_source?
+      attribute :show_source, default: false, cond_method: :show_source?
 
       def initialize
         @state = :gray
@@ -62,7 +56,7 @@ module BetterTrace
     end
 
     def self.helper_methods
-      self.attributes.map {|k, v| v.dig(:helpers) }.compact
+      self.attributes.map { |k, v| v.dig(:helpers) }.compact
     end
 
     private

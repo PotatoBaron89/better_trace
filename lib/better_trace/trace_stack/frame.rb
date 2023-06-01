@@ -6,8 +6,19 @@ module BetterTrace
       IGNORED_METHODS = ["main", "eval", "require", "require_relative"]
       ILLEGAL_METHOD_CHARS = ["`", "'", "<", ">", "block "]
 
-      def initialize(binding)
+
+      attr_accessor :binding, :method, :line, :file, :binding_location, :trace, :caller_locations
+      def initialize(binding, trace)
         @binding = binding
+        @binding_location = binding.source_location.first
+        @trace = trace.map do |t|
+          (t.to_s.split("/")[-4..-1] || file_path.split("/")).join("/")
+        end
+
+        @caller_locations = @binding.eval('caller_locations') unless @binding.eval('self').is_a?(Binding)
+        @method = get_method_from_line(@caller_locations.first.to_s)
+        @line = @caller_locations.first.lineno
+        @file = @caller_locations.first.path
       end
 
       def local_vars
@@ -15,7 +26,6 @@ module BetterTrace
       end
 
       def i_vars
-        puts "hey from i_vars"
         @instance_vars ||= i_vars_from_binding
       end
 

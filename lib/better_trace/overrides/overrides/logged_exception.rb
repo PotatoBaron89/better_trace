@@ -2,15 +2,22 @@
 
 class LoggedException
 
-  extend BetterTrace::Attributable
-  attr_accessor :exception, :error_klass, :path, :trace, :is_rescued, :frames
+  extend BetterTrace::Attributable # Need to swap from attr_accessor
+  # attr_accessor :exception, :error_klass, :path, :trace, :is_rescued, :frames, :caller_locations
+  attribute :exception
+  attribute :error_klass
+  attribute :path
+  attribute :trace
+  attribute :is_rescued
+  attribute :frames
+  attribute :caller_locations
 
-  def initialize(exception, binding, is_rescued)
-
+  def initialize(exception, binding, caller_locations, is_rescued)
     @exception = exception
     @error_klass = exception.class
     @is_rescued = is_rescued
     @binding = binding
+    @caller_locations = caller_locations
 
     @depth = binding.callers.count - 1
     @frames = []
@@ -22,11 +29,17 @@ class LoggedException
 
     i_count = 1 # skip 0
     while i_count < @depth
-      @frames << BetterTrace::TraceStack::Frame.new(binding.of_caller(i_count))
+      @frames << BetterTrace::TraceStack::Frame.new(binding.of_caller(i_count), @caller_locations)
       i_count += 1
     end
   ensure
     Thread.current[:_trace_override_status] = true
+  end
+
+  def output_frames
+    @frames.each do |frame|
+      puts frame.to_s
+    end
   end
 
   # def trace_stack!

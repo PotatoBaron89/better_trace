@@ -1,13 +1,27 @@
 # frozen_string_literal: true
 
 class Exception
+  def self.config
+    BetterTrace.config
+  end
 
   def self.===(other)
     unless trace_in_progress? || !override_enabled?
       self.trace_in_progress = true
       is_rescued = caller_locations[0].label.include?("rescue in block")
 
-      BetterTrace.logged_exceptions << LoggedException.new(other, binding, is_rescued)
+      cl = caller_locations[0]
+      path = (cl.path.to_s.split("/")[-3..-1] || file_path.split("/")).join("/")
+      msg = <<~MSG
+        #{"       - - -  ⚠️   Rescued Exception   ⚠️ - - - ".white.bold}
+            #{("#{path}:#{cl.lineno.to_s}").yellow}
+            #{other.inspect.yellow}
+      MSG
+
+      caller_locations.first(5).each { |l| puts "            #{l.to_s.yellow}" }
+
+      puts msg
+      BetterTrace.logged_exceptions << LoggedException.new(other, binding, caller_locations, is_rescued)
     end
     self.trace_in_progress = false
     super

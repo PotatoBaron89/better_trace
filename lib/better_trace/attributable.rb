@@ -13,13 +13,13 @@ module BetterTrace
     end
 
 
-    def attribute(attr_name, default: nil, with_bool: nil)
+    def attribute(attr_name, default: nil, cond_method: nil)
       return if attributes.include?(attr_name)
 
-      attributes.merge!({ attr_name => { default: default, helpers: with_bool } })
+      attributes.merge!({ attr_name => { default: default, helpers: cond_method } })
       attr_accessor attr_name
 
-      define_method(with_bool) { !!attr_name } if with_bool
+      define_method(cond_method) { !!attr_name } if cond_method
     end
   end
 end
